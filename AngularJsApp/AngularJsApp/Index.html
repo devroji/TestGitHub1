@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <title>Product Managing Application</title>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=divice-width" />
+    <link rel="stylesheet" href="Content/Styles/Bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="Content/Styles/Bootstrap/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="Content/Styles/site.css"/>
+
+    <script src="Scripts/jquery-3.1.1.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/angular.min.js"></script>
+    <script src="App/app.js"></script>
+    
+</head>
+<body>   
+    <div class="container" ng-controller="productController">
+        <div class="page-header">
+            <h2>Product Managing Application</h2>
+        </div>
+        <div class="container" ng-if="isAddOrEdit==false">
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-default" ng-click="addNew()">Add New</button>
+                </div>
+            </div>
+            <div class="row">
+                <div col="col-md-12">
+                    <div class="pull-right">Sort by : <select ng-model="sortColumn">
+                                <option value="prodId">ProductId ASC</option> 
+                                <option value="prodName">Product Name ASC</option>
+                                <option value="-price">Price DESC</option>
+                               </select>
+                    </div>
+                    <table class="table table-stripped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th class="text-center">Actions</th> 
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="prod in products | orderBy:sortColumn">
+                            <tr>
+                                <td>{{prod.prodId}}</td>
+                                <td>{{prod.prodName}}</td>
+                                <td>{{prod.price | currency}}</td>
+                                <td class="text-center">
+                                    <a href="javascript:void(0)" class="btn btn-link" ng-click="viewProduct(prod)">View</a> |
+                                    <a href="javascript:void(0)" class="btn btn-link" ng-click="editProduct(prod.prodId)">Edit</a> |
+                                    <a href="javascript:void(0)" class="btn btn-link" ng-click="deleteProduct(prod.prodId)">Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row" ng-if="selectedProduct!=null">
+                <div class="col-md-4">
+                    <label>ProductId: <span>{{selectedProduct.prodId}}</span></label>
+                </div>
+                <div class="col-md-4">
+                    <albel>Product Name : <span>{{selectedProduct.prodName}}</span></albel>
+                </div>
+                <div class="col-md-4">
+                    <label>Price : <span>{{selectedProduct.price}}</span></label>
+                </div>
+            </div>
+        </div>    
+        <div class="container" ng-if="isAddOrEdit==true">
+            <div class="row">
+                <div class="col-md-12">
+                    <form>
+                        <div class="form-group">
+                            <label for="prodId" class="control-label">Product Id :</label>
+                            <input type="text" class="form-control" ng-model="newProduct.prodId" ng-disabled="isNewProduct==false" />
+                        </div>
+                        <div class="form-group">
+                            <label for="prodName" class="control-label">Product Name</label>
+                            <input type="text" class="form-control" ng-model="newProduct.prodName"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="price" class="control-label">Price</label>
+                            <input type="text" class="form-control" ng-model="newProduct.price"/>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" ng-click="saveProduct()" ng-if="isNewProduct==true">Save</button>
+                            <button type="button" class="btn btn-primary" ng-click="updateProduct()" ng-if="isNewProduct==false">Update</button>
+                            &nbsp;
+                            <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+                        </div>
+                        <div>
+                            <span>{{newProduct | json}}</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
